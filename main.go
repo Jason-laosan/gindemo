@@ -2,11 +2,16 @@ package main
 
 import (
 	"gindemo/common"
+	"gindemo/route"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 )
 
 func main() {
+	InitConfig()
+
 	// db := common.GetDB()
 	common.InitDB()
 
@@ -31,7 +36,21 @@ func main() {
 	// 		"message": "删除学生成功",
 	// 	})
 	// })
-	r = CollectRoute(r)
-
+	port := viper.GetString("server.port")
+	r = route.CollectRoute(r)
+	if port != "" {
+		panic(r.Run(":" + port))
+	}
 	panic(r.Run())
+
+}
+func InitConfig() {
+	workdDir, _ := os.Getwd()
+	viper.SetConfigName("application")
+	viper.SetConfigType("yml")
+	viper.AddConfigPath(workdDir + "/config")
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic(err)
+	}
 }

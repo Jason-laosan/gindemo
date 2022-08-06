@@ -28,3 +28,4 @@
 #dependency 
 gorm v2.0
 gin
+github.com/dgrijalva/jwt-go/v4
